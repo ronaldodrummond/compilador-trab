@@ -7,6 +7,7 @@ package compiler;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Hashtable;
 
 /**
@@ -49,5 +50,105 @@ public class Lexer {
         reserve(new Word(Tag.APP, "app"));
         reserve(new Word(Tag.REAL, "real"));
     	//TALVEZ FALTE ALGUMA PALAVRA RESERVADA AINDA
-    }   
+    }
+
+    private void readch() throws IOException{
+    	ch = (char) file.read();
+    }
+
+    private boolean readch(char c) throws IOException{
+    	readch();
+    	if(ch != c) return false;
+    	ch = ' ';
+    	return true;
+    }  
+
+    public Token scan() throws IOException{
+
+    	for(;; readch()){
+    		if (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') {
+    			continue;
+    		}else if(ch == '\n'){
+    			line++;
+    		}else{
+    			break;
+    		}
+    	}
+
+    	switch(ch){
+    		case '&':
+    			if(readch('&')) return Word.and;
+    			else return new Token('&');
+    		case '|':
+    			if(readch('|')) return Word.or;
+    			else return new Token('|');
+    		case '<':
+    			if(readch('=')) return Word.le;
+    			else return new Token('<');
+    		case '>':
+    			if(readch('=')) return Word.ge;
+    			else return new Token('>');
+    		case '!':
+    			if(readch('=')) return Word.ne;
+    			else return new Token('!');
+    		case '=':
+    			ch = ' ';
+    			return new Token('=');
+    		case '+':
+    			ch = ' ';
+    			return new Token('+');
+    		case '-':
+    			ch = ' ';
+    			return new Token('-');
+    		case '*':
+    			ch = ' ';
+    			return new Token('*');
+    		case '/':
+    			ch = ' ';
+    			return new Token('/');
+    		case '(':
+    			ch = ' ';
+    			return new Token('(');
+    		case ')':
+    			ch = ' ';
+    			return new Token(')');
+    		case '{':
+    			ch = ' ';
+    			return new Token('{');
+    		case '}':
+    			ch = ' ';
+    			return new Token('}');
+    	}
+
+    	if(Character.isDigit(ch)){
+    		int value = 0;
+    		do{
+    			value = 10*value + Character.digit(ch,10);
+    			readch();
+    		}while(Character.isDigit(ch));
+    		return new Num(value);
+    		//IMPLEMENTACAO DA CLASSE VALUE AINDA NAO DEFINIDA, E PRECISO PENSAR SE DEVEMOS CRIAR CLASSES DIFERENTES PARA FLOAT INT E REAL
+    	}
+
+    	if(Character.isLetter(ch)){
+    		StringBuffer sb = new StringBuffer();
+    		do{
+    			sb.append(ch);
+    			readch();
+    		}while(Character.isLetterOrDigit(ch));
+
+    		String s = sb.toString();
+    		Word w = (Word) words.get(s);
+    		if(w != null)
+    			return w;
+    		w = new Word(Tag.ID, s);
+    		words.put(s,w);
+    		return w;
+    	}
+
+    	Token t = new Token(ch);
+    	ch = ' ';
+    	return t;
+    }
+
 }
