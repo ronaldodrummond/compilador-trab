@@ -5,6 +5,7 @@
  */
 package compiler;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class Lexer {
         words.put(w.getLexeme(), w);
     }
 
-    public Lexer(String fileName) throws FileNotFoundException {
+    public Lexer(File fileName) throws FileNotFoundException {
         try {
             file = new FileReader(fileName);
         } catch (FileNotFoundException e) {
