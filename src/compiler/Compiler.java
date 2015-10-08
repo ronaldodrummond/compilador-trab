@@ -20,7 +20,8 @@ public class Compiler {
         
         System.out.println("Análise Léxica");
         Token tok = null;
-        Lexer lexico = null;
+        Lexer lexico= new Lexer();
+        lexico.scan();
        //chamaria classe pra ler o arquivo primeiro e depois chamaria o scan,mas todas as formas que tentei deu erro
        
     }
