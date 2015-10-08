@@ -1,29 +1,32 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package compiler;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import compiler.Lexer;
 import compiler.Token;
-import java.util.Scanner; 
+
 
 public class Compiler {
 
-   
-    public static void main(String[] args) {
-        Scanner ler = new Scanner(System.in);
-        String diretorio; 
-        System.out.println("Compilador");
-        System.out.println("Digite diretório com o nome do arquivo a ser analisado");
-        diretorio = ler.next();
+    public static void main(String[] args) throws IOException {
+        // TODO code application logic here
         
-        System.out.println("Análise Léxica");
-        Token tok = null;
-        Lexer lexico= new Lexer();
-        lexico.scan();
-       //chamaria classe pra ler o arquivo primeiro e depois chamaria o scan,mas todas as formas que tentei deu erro
+        try {
+     JFileChooser chooser = new JFileChooser();
+     int retorno = chooser.showOpenDialog(null);
+ 
+     if (retorno == JFileChooser.APPROVE_OPTION) {
+       Lexer lexer = new Lexer(chooser.getSelectedFile());
+        
+        String token = lexer.scan().toString();
+        System.out.println(token);
        
+     }
+   } catch (FileNotFoundException e) {
+     e.printStackTrace();
+   }
+
     }
-    
 }
