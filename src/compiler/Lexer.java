@@ -5,6 +5,7 @@
  */
 package compiler;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,8 +25,8 @@ public class Lexer {
     private void reserve(Word w){
         words.put(w.getLexeme(), w);
     }
-    
-    public Lexer(String fileName) throws FileNotFoundException{
+   
+    public Lexer(File fileName) throws FileNotFoundException{
         try{
             file = new FileReader(fileName);
         }catch(FileNotFoundException e){
@@ -123,10 +124,18 @@ public class Lexer {
     	if(Character.isDigit(ch)){
     		int value = 0;
     		do{
-    			value = 10*value + Character.digit(ch,10);
-    			readch();
+                    value = 10*value + Character.digit(ch,10);
+                    readch();
     		}while(Character.isDigit(ch));
-    		return new Num(value);
+                
+                if(ch == '.'){
+                    String val = value + ".";
+                    do{
+                        val += ch + "";
+                    }while(Character.isDigit(ch));
+//                    return new NumFloat(Float.parseFloat(val));
+                }
+    		return new NumInt(value);
     		//IMPLEMENTACAO DA CLASSE VALUE AINDA NAO DEFINIDA, E PRECISO PENSAR SE DEVEMOS CRIAR CLASSES DIFERENTES PARA FLOAT INT E REAL
     	}
 
