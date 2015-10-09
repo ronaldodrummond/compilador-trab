@@ -150,6 +150,12 @@ public class Lexer {
             case '}':
                 ch = ' ';
                 return new Token('}');
+            case ':':
+                if (readch('=')) {
+                    return Word.assign;
+                } else {
+                    return new Token(':');
+                }
                 
         }
 
@@ -159,9 +165,15 @@ public class Lexer {
                 value = 10 * value + Character.digit(ch, 10);
                 readch();
             } while (Character.isDigit(ch));
-            return new Num(value);
-            //IMPLEMENTACAO DA CLASSE VALUE AINDA NAO DEFINIDA, E PRECISO PENSAR SE DEVEMOS CRIAR CLASSES DIFERENTES PARA FLOAT INT E REAL
-            //acho que tem que ser junto
+            if(ch == '.'){
+                String valueR = value + ".";
+                while(Character.isDigit(ch)){
+                    valueR += ch + "";
+                }
+                float resFloat = Float.parseFloat(valueR);
+                return new NumFloat(resFloat);
+            }
+            return new NumInt(value);
         }
 
         if (Character.isLetter(ch)) {
@@ -174,10 +186,11 @@ public class Lexer {
             String s = sb.toString();
             Word w = (Word) words.get(s);
             if (w != null) {
-                return w;
+                return w;// Se ja existir na tabela de simbolos
             }
             w = new Word(Tag.ID, s);
             words.put(s, w);
+//            System.out.println("Colocando "+w.toString()+"na tabela de simbolos.");
             return w;
         }
         //olhar os erros e imprimir a linha

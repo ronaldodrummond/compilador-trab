@@ -19,7 +19,7 @@ public class Compiler {
  
      if (retorno == JFileChooser.APPROVE_OPTION) {
        Lexer lexer = new Lexer(chooser.getSelectedFile());
-        
+        //for para percorrer o arquivo
         String token = lexer.scan().toString();
         System.out.println(token);
        

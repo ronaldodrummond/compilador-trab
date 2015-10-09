@@ -38,7 +38,8 @@ public class Tag {
             NE = 278,
             OR = 279,
             REAL = 280,
-            ID = 281;
+            ID = 281,
+            ASGN = 282;
             
             
             
