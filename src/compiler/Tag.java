@@ -39,7 +39,9 @@ public class Tag {
             OR = 279,
             REAL = 280,
             ID = 281,
-            ASGN = 282;
+            ASGN = 282,
+            LIT = 283,
+            ERROR = 284;
             
             
             
