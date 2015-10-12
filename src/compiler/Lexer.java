@@ -206,7 +206,7 @@ public class Lexer {
                 sb.append(ch);
                 readch();
             } while (Character.isLetterOrDigit(ch) || ch == '_');
-            if (ch == '\n') {
+            if (ch == '\n') { 
                 if (sb.toString().equalsIgnoreCase("app") || sb.toString().equalsIgnoreCase("start")) {
                     //System.out.println("");
                 } else {
@@ -226,7 +226,8 @@ public class Lexer {
             }
             w = new Word(Tag.ID, s);
             words.put(s, w);
-//            System.out.println("Colocando "+w.toString()+"na tabela de simbolos.");
+            //IMPRIME NA TELA CADA ENTRADA NA TABELA DE SIMBOLOS
+            System.out.println("Colocando "+w.toString()+" na tabela de simbolos.");
             return w;
         }
 
@@ -251,9 +252,9 @@ public class Lexer {
             }
         }
         //Fazer a impressão de tudo que esta sendo inserido na tabela 
-        for (int i = 0; i < words.size(); i++) {
-            System.out.println(words.get(i));
-        }
+//        for (int i = 0; i < words.size(); i++) {
+//            System.out.println(words.get(i));
+//        }
 
         Token t = new Token(ch);
         ch = ' ';
