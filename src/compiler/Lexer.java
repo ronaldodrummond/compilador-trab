@@ -20,6 +20,7 @@ public class Lexer {
     public static int line = 1; //contador de linhas
     private char ch = ' ';
     private FileReader file;
+    private boolean isApp = false;
 
     private Hashtable words = new Hashtable();
 
@@ -58,6 +59,7 @@ public class Lexer {
     }
 
     private boolean lexicError(char ch) throws IOException {
+
         if (ch != '>' && ch != '<' && ch != '=' && ch != '+'
                 && ch != '-' && ch != '*' && ch != '/'
                 && ch != ';' && ch != '(' && ch != ')'
@@ -206,17 +208,30 @@ public class Lexer {
                 sb.append(ch);
                 readch();
             } while (Character.isLetterOrDigit(ch) || ch == '_');
-            if (ch == '\n') { 
-                if (sb.toString().equalsIgnoreCase("app") || sb.toString().equalsIgnoreCase("start")) {
-                    //System.out.println("");
-                } else {
-                    System.out.println("Erro na linhaa " + line);
-                }
-            } else {
-                if (ch != ',') {
-                    if (lexicError(ch)) {
-                        return new Token(Tag.ERROR);
+//            
+            if (sb.toString().equalsIgnoreCase("app")) {
+                isApp = true;
+            }
+            if (ch != '>' && ch != '<' && ch != '=' && ch != '+'
+                    && ch != '-' && ch != '*' && ch != '/'
+                    && ch != ';' && ch != '(' && ch != ')'
+                    && ch != ' ' && ch != '\t' && ch != '\r'
+                    && ch != '\b' && ch != '.') {
+                
+                if (sb.toString().equalsIgnoreCase("start") || isApp == true) {
+//                    isApp = false;
+                    while (ch != ' ' && ch != '\n' && ch != '\t'
+                            && ch != '\r' && ch != '\b') {
+                        readch();
                     }
+                } else {
+                    System.out.println("Erro na linha "
+                            + line);
+                    while (ch != ' ' && ch != '\n' && ch != '\t'
+                            && ch != '\r' && ch != '\b') {
+                        readch();
+                    }
+                    return new Token(Tag.ERROR);
                 }
             }
             String s = sb.toString();
@@ -227,7 +242,7 @@ public class Lexer {
             w = new Word(Tag.ID, s);
             words.put(s, w);
             //IMPRIME NA TELA CADA ENTRADA NA TABELA DE SIMBOLOS
-            System.out.println("Colocando "+w.toString()+" na tabela de simbolos.");
+            System.out.println("Colocando " + '"' + w.toString() + '"' + " na tabela de simbolos.");
             return w;
         }
 
