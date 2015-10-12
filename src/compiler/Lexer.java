@@ -54,24 +54,24 @@ public class Lexer {
         reserve(new Word(Tag.AND, "and"));
         reserve(new Word(Tag.OR, "or"));
         reserve(new Word(Tag.NUM, "num"));
-        reserve(new Word( Tag.ID,"id" ));
-        //TALVEZ FALTE ALGUMA PALAVRA RESERVADA AINDA
+        reserve(new Word(Tag.ID, "id"));
     }
-    
-    private boolean lexicError(char ch) throws IOException{
+
+    private boolean lexicError(char ch) throws IOException {
         if (ch != '>' && ch != '<' && ch != '=' && ch != '+'
-                    && ch != '-' && ch != '*' && ch != '/'
-                    && ch != ';' && ch != '(' && ch != ')'
-                    && ch != ' ' && ch != '\t' && ch != '\r'
-                    && ch != '\b' && ch != '.') {
-                System.out.println("Erro na linha "
-                        + line);
-                while (ch != ' ' && ch != '\n' && ch != '\t'
-                        && ch != '\r' && ch != '\b') {
-                    readch();
-                }
-                return true;
-            }else{
+                && ch != '-' && ch != '*' && ch != '/'
+                && ch != ';' && ch != '(' && ch != ')'
+                && ch != ' ' && ch != '\t' && ch != '\r'
+                && ch != '\b' && ch != '.') {
+            // pelo que entendi falta uma execessão pra palavra ou caracter...não?
+            System.out.println("Erro na linha "
+                    + line);
+            while (ch != ' ' && ch != '\n' && ch != '\t'
+                    && ch != '\r' && ch != '\b') {
+                readch();
+            }
+            return true;
+        } else {
             return false;
         }
     }
@@ -96,16 +96,13 @@ public class Lexer {
                 continue;
             } else if (ch == '\n') {
                 line++;
-            } 
-            else if(ch=='%')//para os comentarios, anulam o resto da linha
+            } else if (ch == '%')//para os comentarios, anulam o resto da linha
             {
-                while(ch != '\n')
-                {
-                   readch();
+                while (ch != '\n') {
+                    readch();
                 }
                 continue;
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -177,7 +174,7 @@ public class Lexer {
             case ',':
                 ch = ' ';
                 return new Token(',');
-                
+
         }
 //Numeros
         if (Character.isDigit(ch)) {
@@ -186,19 +183,19 @@ public class Lexer {
                 value = 10 * value + Character.digit(ch, 10);
                 readch();
             } while (Character.isDigit(ch));
-            if(lexicError(ch)){
-              //return new Token(ERRO);
-            }else if(ch == '.'){
-                  String valueR = value + ".";
-                while(Character.isDigit(ch)){
+            if (lexicError(ch)) {
+                //return new Token(ERRO);
+            } else if (ch == '.') {
+                String valueR = value + ".";
+                while (Character.isDigit(ch)) {
                     valueR += ch + "";
                 }
-                if(lexicError(ch)){
+                if (lexicError(ch)) {
                     //return new Token(ERRO);
                 }
                 float resFloat = Float.parseFloat(valueR);
-                return new NumFloat(resFloat);   
-            }else{
+                return new NumFloat(resFloat);
+            } else {
                 return new NumInt(value);
             }
         }
@@ -209,17 +206,18 @@ public class Lexer {
                 sb.append(ch);
                 readch();
             } while (Character.isLetterOrDigit(ch) || ch == '_');
-            if(ch == '\n'){
-                if(sb.toString().equalsIgnoreCase("app") || sb.toString().equalsIgnoreCase("start")){
+            if (ch == '\n') {
+                if (sb.toString().equalsIgnoreCase("app") || sb.toString().equalsIgnoreCase("start")) {
                     //System.out.println("");
+                } else {
+                    System.out.println("Erro na linhaa " + line);
                 }
-                else{
-                    System.out.println("Erro na linhaa "+line);
-                }
-            }else{
-                if(ch !=',')
-                    if(lexicError(ch))
+            } else {
+                if (ch != ',') {
+                    if (lexicError(ch)) {
                         return new Token(Tag.ERROR);
+                    }
+                }
             }
             String s = sb.toString();
             Word w = (Word) words.get(s);
@@ -231,32 +229,32 @@ public class Lexer {
 //            System.out.println("Colocando "+w.toString()+"na tabela de simbolos.");
             return w;
         }
-        
+
 //Literal
-        if(ch == '{'){
+        if (ch == '{') {
             readch();
             String literal = "";
-            while(ch != '}'){
-                if(ch == '\n'){
+            while (ch != '}') {
+                if (ch == '\n') {
                     System.out.println("Erro na linha " + line);
                     return new Token(Tag.ERROR);
                 }
                 literal += ch;
                 readch();
             }
-            if(lexicError(ch)){
-                System.out.println("Erro na linha "+line);
+            if (lexicError(ch)) {
+                System.out.println("Erro na linha " + line);
                 return new Token(Tag.ERROR);
-            }
-            else{
+            } else {
                 ch = ' ';
-                return new Word(Tag.LIT,literal);
+                return new Word(Tag.LIT, literal);
             }
         }
-        //olhar os erros e imprimir a linha
         //Fazer a impressão de tudo que esta sendo inserido na tabela 
-        
-        
+        for (int i = 0; i < words.size(); i++) {
+            System.out.println(words.get(i));
+        }
+
         Token t = new Token(ch);
         ch = ' ';
         return t;
