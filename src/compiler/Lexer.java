@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package compiler;
 
 import java.io.File;
@@ -11,17 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Hashtable;
 
-/**
- *
- * @author pedrohbnp
- */
 public class Lexer {
 
     public static int line = 1; //contador de linhas
     private char ch = ' ';
     private FileReader file;
 
-    private Hashtable words = new Hashtable();
+    private Hashtable<String, Token> words = new Hashtable<String, Token>();
 
     private void reserve(Word w) {
         words.put(w.getLexeme(), w);
@@ -96,12 +87,11 @@ public class Lexer {
                 continue;
             } else if (ch == '\n') {
                 line++;
-            } else if (ch == '%')//para os comentarios, anulam o resto da linha
-            {
-                while (ch != '\n') {
+            } else if (ch == '%') {//para os comentarios, anulam o resto da linha
+            	while (ch != '\n') {
                     readch();
                 }
-                continue;
+            	continue;
             } else {
                 break;
             }
@@ -176,7 +166,7 @@ public class Lexer {
                 return new Token(',');
 
         }
-//Numeros
+        //Numeros
         if (Character.isDigit(ch)) {
             int value = 0;
             do {
@@ -199,7 +189,8 @@ public class Lexer {
                 return new NumInt(value);
             }
         }
-//Identificador
+        
+        //Identificador
         if (Character.isLetter(ch) || ch == '_') {
             StringBuffer sb = new StringBuffer();
             do {
@@ -210,13 +201,11 @@ public class Lexer {
                 if (sb.toString().equalsIgnoreCase("app") || sb.toString().equalsIgnoreCase("start")) {
                     //System.out.println("");
                 } else {
-                    System.out.println("Erro na linhaa " + line);
+                    System.out.println("Erro na linha " + line);
                 }
-            } else {
-                if (ch != ',') {
-                    if (lexicError(ch)) {
-                        return new Token(Tag.ERROR);
-                    }
+            } else if (ch != ',') {
+            	if (lexicError(ch)) {
+                    return new Token(Tag.ERROR);
                 }
             }
             String s = sb.toString();
@@ -231,7 +220,7 @@ public class Lexer {
             return w;
         }
 
-//Literal
+        //Literal
         if (ch == '{') {
             readch();
             String literal = "";
