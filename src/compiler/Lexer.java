@@ -211,12 +211,17 @@ public class Lexer {
                     && ch != '\b' && ch != '.') {
                 
                 if (sb.toString().equalsIgnoreCase("start") || sb.toString().equalsIgnoreCase("stop") || isApp == true) {
-//                    isApp = false;
+                    isApp = false;
                     while (ch != ' ' && ch != '\n' && ch != '\t'
                             && ch != '\r' && ch != '\b') {
                         readch();
                     }
-                } else {
+                } else if(ch == ','){
+                    while (ch != ' ' && ch != '\n' && ch != '\t'
+                            && ch != '\r' && ch != '\b') {
+                        readch();
+                    }
+                }else{
                     System.out.println("Erro na linha "
                             + line);
                     while (ch != ' ' && ch != '\n' && ch != '\t'
