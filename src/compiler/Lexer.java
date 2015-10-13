@@ -47,6 +47,7 @@ public class Lexer {
         reserve(new Word(Tag.OR, "or"));
         reserve(new Word(Tag.NUM, "num"));
         reserve(new Word(Tag.ID, "id"));
+        reserve(new Word(Tag.STOP, "stop"));
     }
 
     private boolean lexicError(char ch) throws IOException {
@@ -209,7 +210,7 @@ public class Lexer {
                     && ch != ' ' && ch != '\t' && ch != '\r'
                     && ch != '\b' && ch != '.') {
                 
-                if (sb.toString().equalsIgnoreCase("start") || isApp == true) {
+                if (sb.toString().equalsIgnoreCase("start") || sb.toString().equalsIgnoreCase("stop") || isApp == true) {
 //                    isApp = false;
                     while (ch != ' ' && ch != '\n' && ch != '\t'
                             && ch != '\r' && ch != '\b') {

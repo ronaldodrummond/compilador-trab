@@ -41,7 +41,8 @@ public class Tag {
             ID = 281,
             ASGN = 282,
             LIT = 283,
-            ERROR = 284;
+            ERROR = 284,
+            STOP = 285;
             
             
             
