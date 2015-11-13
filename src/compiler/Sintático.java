@@ -61,9 +61,9 @@ public class Sintático {
     public void Programa() throws IOException {
         //program ::= app identifier body
         switch (token.tag) {
-            case : //tag APP
-                eat(270);
-                identifier();
+            case Tag.APP:
+                eat(Tag.APP);
+                Identifier();
                 body();
                 break;
             default:
@@ -72,14 +72,16 @@ public class Sintático {
     }
 
     public void body() throws IOException {
-         //body ::= [ decl-list] start stmt-list stop
+        //body ::= [ decl-list] start stmt-list stop
         //duvidas quanto a parte [decl-list]
         switch (token.tag) {
-            case : //na implementação que eu vi ele olha se é inteiro ou real com 2 cases no caso 
+            case Tag.INT:
+            case Tag.REAL: //na implementação que eu vi ele olha se é inteiro ou real com 2 cases no caso 
                 DECLlist();
-                eat(); //eat START
+                eat(Tag.START); //eat START
                 STMTlist();
-                eat(); //eat STOP     
+                eat(Tag.STOP); //eat STOP 
+                break;
             default:
                 SintaticoErro();
         }
@@ -99,8 +101,10 @@ public class Sintático {
     public void DECL() throws IOException {
         //decl ::= type ident-list
         switch (token.tag) {
-            case : //case TYPE
+            case Tag.INT:
+            case Tag.REAL:
                 IDENTlist();
+                break;
             default:
                 SintaticoErro();
         }
@@ -109,19 +113,70 @@ public class Sintático {
     public void IDENTlist() throws IOException {
         //ident-list ::= identifier {"," identifier}
         switch (token.tag) {
-            case : //case ID
+            case Tag.ID:
                 Identifier();
-            // aqui colocaria um if pra virgula e mais uma chamada pra Identifier()?
+                 //DUVIDA SE JA VAI PASSAR PARA O PROXIMO TOKEN OU NÃO
+                if (token.tag == ';') {
+                    eat(';');
+                    Identifier();
+                }
+                break;
             default:
                 SintaticoErro();
         }
     }
 
-    public void Identifier() throws IOException {
+    public void STMTlist() throws IOException {
+        // stmt-list ::= stmt {";" stmt}
+        switch (token.tag) {
+            case Tag.IF:
+            case Tag.ID:
+            case Tag.REPEAT:
+            case Tag.READ:
+            case Tag.WHILE:
+            case Tag.WRITE:
+                STMT();
+               
+                if (token.tag == ';') {
+                    eat(';');
+                    STMT();
+                }
+                break;
+
+            default:
+                SintaticoErro();
+        }
 
     }
 
-    public void STMTlist() throws IOException {
+    public void STMT() throws IOException {
+        //stmt ::= assign-stmt | if-stmt | while-stmt | repeat-stmt| read-stmt | write-stmt
+        switch(token.tag){
+            case Tag.ID:
+                ASSIGNstmt();
+                break;
+            case Tag.IF:
+                IFstmt();
+                break;
+            case Tag.WHILE:
+                WHILEstmt();
+                break;
+            case Tag.REPEAT:
+                REPEATstmt();
+                break;
+            case Tag.READ:
+                READstmt();
+                break;
+            case Tag.WRITE:
+                WRITEstmt();
+                break;
+            default:
+                SintaticoErro();
+
+    }
+
+    public void Identifier() throws IOException {
+
     }
 
 }
