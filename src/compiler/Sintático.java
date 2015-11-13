@@ -42,9 +42,9 @@ public class Sintático {
         //MELHOR CONFERIR  
         //O for deve ser feito quando for chamar esse método
         Token t = lexer.scan();
-        if(t != null){
+        if (t != null) {
             token = t;
-        }else{
+        } else {
             //Else  no caso de ter acabado de ler
         }
 //        token = lexer.words.elements(i);
@@ -122,7 +122,7 @@ public class Sintático {
         switch (token.tag) {
             case Tag.ID:
                 Identifier();
-                 //DUVIDA SE JA VAI PASSAR PARA O PROXIMO TOKEN OU NÃO
+
                 if (token.tag == ';') {
                     eat(';');
                     Identifier();
@@ -143,7 +143,7 @@ public class Sintático {
             case Tag.WHILE:
             case Tag.WRITE:
                 STMT();
-               
+
                 if (token.tag == ';') {
                     eat(';');
                     STMT();
@@ -158,7 +158,7 @@ public class Sintático {
 
     public void STMT() throws IOException {
         //stmt ::= assign-stmt | if-stmt | while-stmt | repeat-stmt| read-stmt | write-stmt
-        switch(token.tag){
+        switch (token.tag) {
             case Tag.ID:
                 ASSIGNstmt();
                 break;
@@ -180,14 +180,65 @@ public class Sintático {
             default:
                 SintaticoErro();
 
+        }
+    }
+
+    public void ASSIGNstmt() throws IOException {
+        //assign-stmt ::= identifier ":=" simple_expr 
+        switch (token.tag) {
+            case Tag.ID:
+                eat(Tag.ID);
+                Identifier();
+                eat(Tag.ASGN);
+                SIMPLEexpr();
+                break;
+            default:
+                SintaticoErro();
+
+        }
+    }
+
+    public void IFstmt() throws IOException {
+        //if-stmt ::= if condition then stmt-list else-stmt
+        switch (token.tag) {
+            case Tag.IF:
+                eat(Tag.IF);
+                Condition();
+                eat(Tag.THEN);
+                STMTlist();
+                eat(Tag.ELSE);
+                STMT();
+                break;
+            default:
+                SintaticoErro();
+
+        }
+    }
+
+    public void ELSEstmt() throws IOException {
+     //else-stmt ::= end | else stmt-list end
+        switch (token.tag) {
+            case Tag.END:
+                eat(Tag.END);
+                break;
+            case Tag.ELSE:
+                eat(Tag.ELSE);
+                STMTlist();
+                eat(Tag.END);
+                break;
+            default:
+                SintaticoErro();
+
+        }
+        
     }
 
     public void Identifier() throws IOException {
 
     }
-    
-    public void AssignStmt(){
-        
+
+    public void AssignStmt() throws IOException {
+
     }
 
 }
