@@ -31,24 +31,19 @@ public class Sintático {
 
     //implementação baseada no livro
     public Sintático(Lexer lexer) throws IOException {
-        //PEGAR O QUE ESTA SENDO ANALISADO NO LEXICO
         this.lexer = lexer;
         token = lexer.words();
     }
 
     private void avanca() throws IOException {
-        //DUVIDA
-        //teria que fazer um for pra pegar o proximo token da lista de words, então fiz uma variavel I global que vai fazendo isso
-        //MELHOR CONFERIR  
-        //O for deve ser feito quando for chamar esse método
+        
         Token t = lexer.scan();
         if (t != null) {
             token = t;
         } else {
             //Else  no caso de ter acabado de ler
         }
-//        token = lexer.words.elements(i);
-//        i++;
+
     }
 
     private void SintaticoErro() {
@@ -206,8 +201,7 @@ public class Sintático {
                 Condition();
                 eat(Tag.THEN);
                 STMTlist();
-                eat(Tag.ELSE);
-                STMT();
+                ELSEstmt();
                 break;
             default:
                 SintaticoErro();
@@ -232,7 +226,16 @@ public class Sintático {
         }
         
     }
-
+ public void Condition() throws IOException {
+    //condition ::= expression 
+     Expresion();
+     
+ }
+  public void REPEATstmt() throws IOException {
+ //repeat-stmt ::= repeat stmt-list stmt-suffix
+      
+      
+  }
     public void Identifier() throws IOException {
 
     }
@@ -240,5 +243,55 @@ public class Sintático {
     public void AssignStmt() throws IOException {
 
     }
+/* O QUE FALTA 
+    
+stmt-suffix ::= until condition 
 
+while-stmt ::= stmt-prefix stmt-list end 
+
+stmt-prefix ::= while condition do 
+
+read-stmt ::= read "(" identifier ")" 
+
+write-stmt ::= write "(" writable ")" 
+
+writable ::= simple-expr | literal 
+
+expression ::= simple-expr | simple-expr relop simple-
+expr 
+
+simple-expr ::= term simple-expr’
+
+simple-expr’ ::= λ | addop term simple-expr’  
+
+term ::= factor-a term’
+
+term’ ::= λ | mulop factor-a term’  
+ 
+
+fator-a ::= factor | "!" factor | "-" factor 
+
+factor ::= identifier | constant | "(" expression ")" 
+
+relop ::= "=" | ">" | ">=" | "<" | "<=" | "!=" 
+
+addop ::= "+" | "-" | "||" mulop ::= "*" | "/" | "&&" 
+
+constant ::= integer_const | float_const 
+
+integer_const ::= digit {digit} 
+
+float_const ::= digit {digit} “.” digit {digit} 
+
+literal ::= " {" {caractere} "}" 
+
+identifier ::= letter |“_” {letter | digit | “_”} 
+
+letter ::= [A-Za-z] 
+
+digit ::= [0-9] 
+
+caractere ::= um dos 256 caracteres
+
+    */
 }
