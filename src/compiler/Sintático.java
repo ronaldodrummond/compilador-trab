@@ -39,9 +39,16 @@ public class Sintático {
     private void avanca() throws IOException {
         //DUVIDA
         //teria que fazer um for pra pegar o proximo token da lista de words, então fiz uma variavel I global que vai fazendo isso
-        //MELHOR CONFERIR   
-        token = lexer.words.elements(i);
-        i++;
+        //MELHOR CONFERIR  
+        //O for deve ser feito quando for chamar esse método
+        Token t = lexer.scan();
+        if(t != null){
+            token = t;
+        }else{
+            //Else  no caso de ter acabado de ler
+        }
+//        token = lexer.words.elements(i);
+//        i++;
     }
 
     private void SintaticoErro() {
@@ -177,6 +184,10 @@ public class Sintático {
 
     public void Identifier() throws IOException {
 
+    }
+    
+    public void AssignStmt(){
+        
     }
 
 }
