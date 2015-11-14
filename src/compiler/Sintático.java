@@ -233,38 +233,165 @@ public class Sintático {
  }
   public void REPEATstmt() throws IOException {
  //repeat-stmt ::= repeat stmt-list stmt-suffix
-      
-      
+      switch (token.tag) {
+            case Tag.REPEAT:
+                eat(Tag.REPEAT);
+                STMTlist();
+                STMTsuffix();
+                break;
+            default:
+                SintaticoErro();
+
+        }
   }
-    public void Identifier() throws IOException {
+  
+  public void STMTsuffix() throws IOException {
+      //stmt-suffix ::= until condition 
+       switch (token.tag) {
+            case Tag.UNTIL:
+                eat(Tag.UNTIL);
+                Condition();
+                break;
+            default:
+                SintaticoErro();
+
+        }
 
     }
-
-    public void AssignStmt() throws IOException {
-
+  
+  public void WHILEstmt() throws IOException {
+      //while-stmt ::= stmt-prefix stmt-list end 
+      switch (token.tag) {
+            case Tag.WHILE:
+                STMTprefix();
+                STMTlist();                
+                eat(Tag.END);
+                break;
+            default:
+                SintaticoErro();
+        }
     }
-/* O QUE FALTA 
+
+  public void STMTprefix() throws IOException {
+      //stmt-prefix ::= while condition do 
+       switch (token.tag) {
+            case Tag.WHILE:              
+                eat(Tag.WHILE);
+                Condition();
+                eat(Tag.DO);
+                break;
+            default:
+                SintaticoErro();
+       }
+    }
+    public void READstmt() throws IOException {
+//read-stmt ::= read "(" identifier ")" 
+        switch (token.tag) {
+            case Tag.READ:              
+                eat(Tag.READ);
+                eat('(');
+                Identifier();
+                eat(')');
+                break;
+            default:
+                SintaticoErro();
+       }
+    }
     
-stmt-suffix ::= until condition 
+    public void WRITEstmt() throws IOException {
+        //write-stmt ::= write "(" writable ")" 
+         switch (token.tag) {
+            case Tag.WRITE:              
+                eat(Tag.WRITE);
+                eat('(');
+                WRITABLE();
+                eat(')');
+                break;
+            default:
+                SintaticoErro();
+       }
 
-while-stmt ::= stmt-prefix stmt-list end 
+    }
+     public void WRITABLE() throws IOException {
+        //writable ::= simple-expr | literal 
+          switch (token.tag) {
+            case Tag.LIT:  
+                eat(Tag.LIT);
+                break;
+            case Tag.ID:
+            case Tag.INT:
+            case Tag.REAL:
+            case '(':
+            case '{':
+            case '!':
+            case '-':
+                SIMPLEexpr();
+                break;
+            default:
+                SintaticoErro();
+       }
+    }
+      public void EXPRESSION() throws IOException {
+        //expression ::= simple-expr | simple-expr relop simple-expr 
+          switch (token.tag) {
+            case Tag.ID:
+            case Tag.INT:
+            case Tag.REAL:
+            case '(':
+            case '{':
+            case '!':
+            case '-':
+                SIMPLEexpr();
+                if(token.tag == Tag.EQ ||token.tag == Tag.NE || token.tag == Tag.GE 
+            || token.tag == Tag.LE  || token.tag == '>' || token.tag == '<')
+                {
+                    Relop();
+                    SIMPLEexpr();
+                }
+                break;
+            default:
+                SintaticoErro();
+       }
+      }
+     public void SIMPLEexpr() throws IOException {
+        //simple-expr ::= term simple-expr’
+         switch (token.tag) {
+            case Tag.ID:
+            case Tag.INT:
+            case Tag.REAL:
+            case '(':
+            case '{':
+            case '!':
+            case '-':
+                Term();
+                SIMPLEexpression();
+                break;
+            default:
+                SintaticoErro();
+       }
+      }
+     
+      public void SIMPLEexpression() throws IOException {
+        //simple-expr’ ::= λ | addop term simple-expr’ 
+          if(token.tag == Tag.OR || token.tag == '+' || token.tag == '-') {
+                Addop();
+                Term();
+                SIMPLEexpression();
+       }
+      }
+       public void WRITABLE() throws IOException {
+        //term ::= factor-a term’
+      }
+       public void WRITABLE() throws IOException {
+        //
+      }
+       public void WRITABLE() throws IOException {
+        //
+      }
+/* O QUE FALTA 
+ 
 
-stmt-prefix ::= while condition do 
 
-read-stmt ::= read "(" identifier ")" 
-
-write-stmt ::= write "(" writable ")" 
-
-writable ::= simple-expr | literal 
-
-expression ::= simple-expr | simple-expr relop simple-
-expr 
-
-simple-expr ::= term simple-expr’
-
-simple-expr’ ::= λ | addop term simple-expr’  
-
-term ::= factor-a term’
 
 term’ ::= λ | mulop factor-a term’  
  
