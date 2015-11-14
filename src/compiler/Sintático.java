@@ -36,7 +36,7 @@ public class Sintático {
     }
 
     private void avanca() throws IOException {
-        
+
         Token t = lexer.scan();
         if (t != null) {
             token = t;
@@ -210,7 +210,7 @@ public class Sintático {
     }
 
     public void ELSEstmt() throws IOException {
-     //else-stmt ::= end | else stmt-list end
+        //else-stmt ::= end | else stmt-list end
         switch (token.tag) {
             case Tag.END:
                 eat(Tag.END);
@@ -224,16 +224,18 @@ public class Sintático {
                 SintaticoErro();
 
         }
-        
+
     }
- public void Condition() throws IOException {
-    //condition ::= expression 
-     Expresion();
-     
- }
-  public void REPEATstmt() throws IOException {
- //repeat-stmt ::= repeat stmt-list stmt-suffix
-      switch (token.tag) {
+
+    public void Condition() throws IOException {
+        //condition ::= expression 
+        EXPRESSION();
+
+    }
+
+    public void REPEATstmt() throws IOException {
+        //repeat-stmt ::= repeat stmt-list stmt-suffix
+        switch (token.tag) {
             case Tag.REPEAT:
                 eat(Tag.REPEAT);
                 STMTlist();
@@ -243,11 +245,11 @@ public class Sintático {
                 SintaticoErro();
 
         }
-  }
-  
-  public void STMTsuffix() throws IOException {
-      //stmt-suffix ::= until condition 
-       switch (token.tag) {
+    }
+
+    public void STMTsuffix() throws IOException {
+        //stmt-suffix ::= until condition 
+        switch (token.tag) {
             case Tag.UNTIL:
                 eat(Tag.UNTIL);
                 Condition();
@@ -258,13 +260,13 @@ public class Sintático {
         }
 
     }
-  
-  public void WHILEstmt() throws IOException {
-      //while-stmt ::= stmt-prefix stmt-list end 
-      switch (token.tag) {
+
+    public void WHILEstmt() throws IOException {
+        //while-stmt ::= stmt-prefix stmt-list end 
+        switch (token.tag) {
             case Tag.WHILE:
                 STMTprefix();
-                STMTlist();                
+                STMTlist();
                 eat(Tag.END);
                 break;
             default:
@@ -272,22 +274,23 @@ public class Sintático {
         }
     }
 
-  public void STMTprefix() throws IOException {
-      //stmt-prefix ::= while condition do 
-       switch (token.tag) {
-            case Tag.WHILE:              
+    public void STMTprefix() throws IOException {
+        //stmt-prefix ::= while condition do 
+        switch (token.tag) {
+            case Tag.WHILE:
                 eat(Tag.WHILE);
                 Condition();
                 eat(Tag.DO);
                 break;
             default:
                 SintaticoErro();
-       }
+        }
     }
+
     public void READstmt() throws IOException {
 //read-stmt ::= read "(" identifier ")" 
         switch (token.tag) {
-            case Tag.READ:              
+            case Tag.READ:
                 eat(Tag.READ);
                 eat('(');
                 Identifier();
@@ -295,13 +298,13 @@ public class Sintático {
                 break;
             default:
                 SintaticoErro();
-       }
+        }
     }
-    
+
     public void WRITEstmt() throws IOException {
         //write-stmt ::= write "(" writable ")" 
-         switch (token.tag) {
-            case Tag.WRITE:              
+        switch (token.tag) {
+            case Tag.WRITE:
                 eat(Tag.WRITE);
                 eat('(');
                 WRITABLE();
@@ -309,13 +312,14 @@ public class Sintático {
                 break;
             default:
                 SintaticoErro();
-       }
+        }
 
     }
-     public void WRITABLE() throws IOException {
+
+    public void WRITABLE() throws IOException {
         //writable ::= simple-expr | literal 
-          switch (token.tag) {
-            case Tag.LIT:  
+        switch (token.tag) {
+            case Tag.LIT:
                 eat(Tag.LIT);
                 break;
             case Tag.ID:
@@ -329,11 +333,12 @@ public class Sintático {
                 break;
             default:
                 SintaticoErro();
-       }
+        }
     }
-      public void EXPRESSION() throws IOException {
+
+    public void EXPRESSION() throws IOException {
         //expression ::= simple-expr | simple-expr relop simple-expr 
-          switch (token.tag) {
+        switch (token.tag) {
             case Tag.ID:
             case Tag.INT:
             case Tag.REAL:
@@ -342,20 +347,20 @@ public class Sintático {
             case '!':
             case '-':
                 SIMPLEexpr();
-                if(token.tag == Tag.EQ ||token.tag == Tag.NE || token.tag == Tag.GE 
-            || token.tag == Tag.LE  || token.tag == '>' || token.tag == '<')
-                {
+                if (token.tag == Tag.EQ || token.tag == Tag.NE || token.tag == Tag.GE
+                        || token.tag == Tag.LE || token.tag == '>' || token.tag == '<') {
                     Relop();
                     SIMPLEexpr();
                 }
                 break;
             default:
                 SintaticoErro();
-       }
-      }
-     public void SIMPLEexpr() throws IOException {
+        }
+    }
+
+    public void SIMPLEexpr() throws IOException {
         //simple-expr ::= term simple-expr’
-         switch (token.tag) {
+        switch (token.tag) {
             case Tag.ID:
             case Tag.INT:
             case Tag.REAL:
@@ -368,57 +373,266 @@ public class Sintático {
                 break;
             default:
                 SintaticoErro();
-       }
-      }
-     
-      public void SIMPLEexpression() throws IOException {
+        }
+    }
+
+    public void SIMPLEexpression() throws IOException {
         //simple-expr’ ::= λ | addop term simple-expr’ 
-          if(token.tag == Tag.OR || token.tag == '+' || token.tag == '-') {
-                Addop();
-                Term();
-                SIMPLEexpression();
-       }
-      }
-       public void WRITABLE() throws IOException {
+        if (token.tag == Tag.OR || token.tag == '+' || token.tag == '-') {
+            Addop();
+            Term();
+            SIMPLEexpression();
+        }
+    }
+
+    public void Term() throws IOException {
         //term ::= factor-a term’
-      }
-       public void WRITABLE() throws IOException {
-        //
-      }
-       public void WRITABLE() throws IOException {
-        //
-      }
-/* O QUE FALTA 
- 
+        switch (token.tag) {
+            case Tag.ID:
+            case Tag.INT:
+            case Tag.REAL:
+            case '(':
+            case '{':
+            case '!':
+            case '-':
+                factorA();
+                Termo();
+                break;
+            default:
+                SintaticoErro();
+        }
 
+    }
 
+    public void Termo() throws IOException {
+        //term’ ::= λ | mulop factor-a term’  
+        switch (token.tag) {
+            case '*':
+                eat('*');
+                factorA();
+                Termo();
+                break;
+            case ('/'):
+                eat('/');
+                factorA();
+                Termo();
+                break;
+            case Tag.AND:
+                eat(Tag.AND);
+                factorA();
+                Termo();
+                break;
+            //não coloquei default por poder ser Lambida, então ACHO que se fosse lambida ia dar erro
+        }
+    }
 
-term’ ::= λ | mulop factor-a term’  
- 
+    public void factorA() throws IOException {
+        //fator-a ::= factor | "!" factor | "-" factor 
+        switch (token.tag) {
+            case '!':
+                eat('!');
+                factor();
+                break;
+            case '-':
+                eat('-');
+                factor();
+                break;
+            case '(':
+                eat('(');
+                factor();
+                break;
+            case Tag.ID:
+            case Tag.INT:
+            case Tag.REAL:
+                factor();
+                break;
+            default:
+                SintaticoErro();
 
-fator-a ::= factor | "!" factor | "-" factor 
+        }
 
-factor ::= identifier | constant | "(" expression ")" 
+    }
 
-relop ::= "=" | ">" | ">=" | "<" | "<=" | "!=" 
+    public void factor() throws IOException {
+        //factor ::= identifier | constant | "(" expression ")" 
+        switch (token.tag) {
+            case Tag.ID:
+                Identifier();
+                break;
+            case Tag.NUM:
+                Constant();
+                break;
+            case ('('):
+                eat('(');
+                EXPRESSION();
+                eat(')');
+                break;
+            default:
+                SintaticoErro();
 
-addop ::= "+" | "-" | "||" mulop ::= "*" | "/" | "&&" 
+        }
+    }
 
-constant ::= integer_const | float_const 
+    public void Relop() throws IOException {
+        //relop ::= "=" | ">" | ">=" | "<" | "<=" | "!=" 
+        switch (token.tag) {
+            case Tag.EQ:
+                eat(Tag.EQ);
+                break;
+            case Tag.GR:
+                eat(Tag.GR);
+                break;
+            case Tag.GE:
+                eat(Tag.GE);
+                break;
+            case Tag.LS:
+                eat(Tag.LS);
+                break;
+            case Tag.LE:
+                eat(Tag.LE);
+                break;
+            case Tag.NE:
+                eat(Tag.NE);
+                break;
+            default:
+                SintaticoErro();
 
-integer_const ::= digit {digit} 
+        }
+    }
 
-float_const ::= digit {digit} “.” digit {digit} 
+    public void ADDop() throws IOException {
+        // addop ::= "+" | "-" | "||" 
+        switch (token.tag) {
+            case ('+'):
+                eat('+');
+                break;
+            case ('-'):
+                eat('-');
+                break;
+            case Tag.OR:
+                eat(Tag.OR);
+                break;
+            default:
+                SintaticoErro();
 
-literal ::= " {" {caractere} "}" 
+        }
+    }
 
-identifier ::= letter |“_” {letter | digit | “_”} 
+    public void MULop() throws IOException {
+        //mulop ::= "*" | "/" | "&&" 
+        switch (token.tag) {
+            case ('*'):
+                eat('*');
+                break;
+            case ('/'):
+                eat('/');
+                break;
+            case Tag.AND:
+                eat(Tag.AND);
+                break;
+            default:
+                SintaticoErro();
 
-letter ::= [A-Za-z] 
+        }
+    }
 
-digit ::= [0-9] 
+    public void Constant() throws IOException {
+        //constant ::= integer_const | float_const 
+        switch (token.tag) {
+            case Tag.INT:
+                INTEGERconst();
+                break;
+            case Tag.FLOAT:
+                FLOATconst();
+                break;
+            default:
+                SintaticoErro();
 
-caractere ::= um dos 256 caracteres
+        }
+    }
 
-    */
+    public void INTEGERconst() throws IOException {
+        // integer_const ::= digit {digit} 
+        switch (token.tag) {
+            case Tag.INT:
+                eat(Tag.INT);
+                if (token.tag == Tag.INT) //se for seguido de mais numeros já olha
+                {
+                    INTEGERconst();
+                }
+                break;
+            default:
+                SintaticoErro();
+
+        }
+    }
+
+    public void FLOATconst() throws IOException {
+        // float_const ::= digit {digit} “.” digit {digit} 
+        switch (token.tag) {
+            case Tag.FLOAT:
+                eat(Tag.FLOAT);
+                if (token.tag == Tag.FLOAT) //se for seguido de mais numeros já olha
+                {
+                    FLOATconst();
+                }
+                eat('.');
+                eat(Tag.FLOAT);
+                if (token.tag == Tag.FLOAT) //se for seguido de mais numeros já olha
+                {
+                    FLOATconst();
+                }
+                break;
+            default:
+                SintaticoErro();
+
+        }
+
+    }
+
+    public void Literal() throws IOException {
+        //literal ::= " {" {caractere} "}" 
+        switch (token.tag) {
+            case ('{'):
+                eat('{');
+                if (token.tag == '{') //se for seguido de mais } já olha
+                {
+                    Literal();
+                }
+                Caractere();
+                eat('}');
+                 if (token.tag == '{') //se for seguido de mais } já olha
+                {
+                    Literal();
+                }                
+                break;
+            default:
+                SintaticoErro();
+        }
+    }
+
+    public void Identifier() throws IOException {
+        //Não sei se é isso mesmo, DUVIDA
+        //identifier ::= letter |“_” {letter | digit | “_”} 
+        switch (token.tag) {
+            case (Tag.ID):
+                eat(Tag.ID);
+                break;
+            default:
+                SintaticoErro();
+
+        }
+        
+    }
+
+    public void WRITABLE() throws IOException {
+        // letter ::= [A-Za-z] 
+    }
+
+    public void WRITABLE() throws IOException {
+        //digit ::= [0-9] 
+    }
+    public void WRITABLE() throws IOException {
+        //caractere ::= um dos 256 caracteres
+    }
 }
