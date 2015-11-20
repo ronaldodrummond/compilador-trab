@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package compiler;
 
 import java.util.ArrayList;
@@ -15,13 +10,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+
 import compiler.Tag;
 
-/**
- *
- * @author 'Loraine
- */
-public class Sintático {
+public class Sintatico {
 
     private Lexer lexer;
     private Token token;
@@ -30,23 +22,24 @@ public class Sintático {
     int i = 0;//para o for que vai rodar a hashtable
 
     //implementação baseada no livro
-    public Sintático(Lexer lexer) throws IOException {
+    public Sintatico(Lexer lexer) throws IOException {
         this.lexer = lexer;
-        token = lexer.words();
+        //token = lexer.words();
+        avanca();
     }
 
     private void avanca() throws IOException {
-
-        Token t = lexer.scan();
-        if (t != null) {
-            token = t;
-        } else {
-            //Else  no caso de ter acabado de ler
-        }
+    	token = lexer.scan();
+//        Token t = lexer.scan();
+//        if (t != null) {
+//            token = t;
+//        } else {
+//            //Else  no caso de ter acabado de ler
+//        }
 
     }
 
-    private void SintaticoErro() {
+    private void erro() {
         System.out.println("Erro  na linha " + Lexer.line + " perto do token " + token.toString());
         System.exit(0);
     }
@@ -56,12 +49,17 @@ public class Sintático {
             System.out.println("eat " + token);
             avanca();
         } else {
-            SintaticoErro();
+            erro();
         }
     }
 
-    public void Programa() throws IOException {
+    //produção do símbolo inicial da gramática
+    public void programa() throws IOException {
         //program ::= app identifier body
+    	eat(Tag.START);
+    	
+    	//criar aqui a tabela de simbolos
+    	
         switch (token.tag) {
             case Tag.APP:
                 eat(Tag.APP);
@@ -69,7 +67,7 @@ public class Sintático {
                 body();
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
@@ -79,40 +77,41 @@ public class Sintático {
         switch (token.tag) {
             case Tag.INT:
             case Tag.REAL: //na implementação que eu vi ele olha se é inteiro ou real com 2 cases no caso 
-                DECLlist();
+                decList();
                 eat(Tag.START); //eat START
-                STMTlist();
+                stmtList();
                 eat(Tag.STOP); //eat STOP 
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
-    public void DECLlist() throws IOException {
+    public void decList() throws IOException {
         //decl-list ::= decl {";" decl}
         DECL();
         if (token.tag == ';') {
             eat(';');
             DECL();
         } else {
-            SintaticoErro();
+            erro();
         }
     }
 
-    public void DECL() throws IOException {
+    public void decl() throws IOException {
         //decl ::= type ident-list
+    	//adicionar aqui o tipo
         switch (token.tag) {
             case Tag.INT:
             case Tag.REAL:
-                IDENTlist();
+                identList();
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
-    public void IDENTlist() throws IOException {
+    public void identList() throws IOException {
         //ident-list ::= identifier {"," identifier}
         switch (token.tag) {
             case Tag.ID:
@@ -124,11 +123,11 @@ public class Sintático {
                 }
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
-    public void STMTlist() throws IOException {
+    public void stmtList() throws IOException {
         // stmt-list ::= stmt {";" stmt}
         switch (token.tag) {
             case Tag.IF:
@@ -137,28 +136,28 @@ public class Sintático {
             case Tag.READ:
             case Tag.WHILE:
             case Tag.WRITE:
-                STMT();
+                stmt();
 
                 if (token.tag == ';') {
                     eat(';');
-                    STMT();
+                    stmt();
                 }
                 break;
 
             default:
-                SintaticoErro();
+                erro();
         }
 
     }
 
-    public void STMT() throws IOException {
+    public void stmt() throws IOException {
         //stmt ::= assign-stmt | if-stmt | while-stmt | repeat-stmt| read-stmt | write-stmt
         switch (token.tag) {
             case Tag.ID:
-                ASSIGNstmt();
+                assignStmt();
                 break;
             case Tag.IF:
-                IFstmt();
+                ifStmt();
                 break;
             case Tag.WHILE:
                 WHILEstmt();
@@ -167,49 +166,49 @@ public class Sintático {
                 REPEATstmt();
                 break;
             case Tag.READ:
-                READstmt();
+                readStmt();
                 break;
             case Tag.WRITE:
-                WRITEstmt();
+                writeStmt();
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
 
-    public void ASSIGNstmt() throws IOException {
+    public void assignStmt() throws IOException {
         //assign-stmt ::= identifier ":=" simple_expr 
         switch (token.tag) {
             case Tag.ID:
                 eat(Tag.ID);
                 Identifier();
                 eat(Tag.ASGN);
-                SIMPLEexpr();
+                simpleExpr();
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
 
-    public void IFstmt() throws IOException {
+    public void ifStmt() throws IOException {
         //if-stmt ::= if condition then stmt-list else-stmt
         switch (token.tag) {
             case Tag.IF:
                 eat(Tag.IF);
-                Condition();
+                condition();
                 eat(Tag.THEN);
-                STMTlist();
-                ELSEstmt();
+                stmtList();
+                esleStmt();
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
 
-    public void ELSEstmt() throws IOException {
+    public void esleStmt() throws IOException {
         //else-stmt ::= end | else stmt-list end
         switch (token.tag) {
             case Tag.END:
@@ -217,19 +216,19 @@ public class Sintático {
                 break;
             case Tag.ELSE:
                 eat(Tag.ELSE);
-                STMTlist();
+                stmtList();
                 eat(Tag.END);
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
 
     }
 
-    public void Condition() throws IOException {
+    public void condition() throws IOException {
         //condition ::= expression 
-        EXPRESSION();
+        expression();
 
     }
 
@@ -238,24 +237,24 @@ public class Sintático {
         switch (token.tag) {
             case Tag.REPEAT:
                 eat(Tag.REPEAT);
-                STMTlist();
-                STMTsuffix();
+                stmtList();
+                stmtSuffix();
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
 
-    public void STMTsuffix() throws IOException {
+    public void stmtSuffix() throws IOException {
         //stmt-suffix ::= until condition 
         switch (token.tag) {
             case Tag.UNTIL:
                 eat(Tag.UNTIL);
-                Condition();
+                condition();
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
 
@@ -266,11 +265,11 @@ public class Sintático {
         switch (token.tag) {
             case Tag.WHILE:
                 STMTprefix();
-                STMTlist();
+                stmtList();
                 eat(Tag.END);
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
@@ -279,15 +278,15 @@ public class Sintático {
         switch (token.tag) {
             case Tag.WHILE:
                 eat(Tag.WHILE);
-                Condition();
+                condition();
                 eat(Tag.DO);
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
-    public void READstmt() throws IOException {
+    public void readStmt() throws IOException {
 //read-stmt ::= read "(" identifier ")" 
         switch (token.tag) {
             case Tag.READ:
@@ -297,11 +296,11 @@ public class Sintático {
                 eat(')');
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
-    public void WRITEstmt() throws IOException {
+    public void writeStmt() throws IOException {
         //write-stmt ::= write "(" writable ")" 
         switch (token.tag) {
             case Tag.WRITE:
@@ -311,7 +310,7 @@ public class Sintático {
                 eat(')');
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
 
     }
@@ -329,14 +328,14 @@ public class Sintático {
             case '{':
             case '!':
             case '-':
-                SIMPLEexpr();
+                simpleExpr();
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
-    public void EXPRESSION() throws IOException {
+    public void expression() throws IOException {
         //expression ::= simple-expr | simple-expr relop simple-expr 
         switch (token.tag) {
             case Tag.ID:
@@ -346,19 +345,19 @@ public class Sintático {
             case '{':
             case '!':
             case '-':
-                SIMPLEexpr();
+                simpleExpr();
                 if (token.tag == Tag.EQ || token.tag == Tag.NE || token.tag == Tag.GE
                         || token.tag == Tag.LE || token.tag == '>' || token.tag == '<') {
-                    Relop();
-                    SIMPLEexpr();
+                    relop();
+                    simpleExpr();
                 }
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
-    public void SIMPLEexpr() throws IOException {
+    public void simpleExpr() throws IOException {
         //simple-expr ::= term simple-expr’
         switch (token.tag) {
             case Tag.ID:
@@ -368,24 +367,24 @@ public class Sintático {
             case '{':
             case '!':
             case '-':
-                Term();
-                SIMPLEexpression();
+                term();
+                simpleExpr2();
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
-    public void SIMPLEexpression() throws IOException {
+    public void simpleExpr2() throws IOException {
         //simple-expr’ ::= λ | addop term simple-expr’ 
         if (token.tag == Tag.OR || token.tag == '+' || token.tag == '-') {
             Addop();
-            Term();
-            SIMPLEexpression();
+            term();
+            simpleExpr2();
         }
     }
 
-    public void Term() throws IOException {
+    public void term() throws IOException {
         //term ::= factor-a term’
         switch (token.tag) {
             case Tag.ID:
@@ -396,31 +395,31 @@ public class Sintático {
             case '!':
             case '-':
                 factorA();
-                Termo();
+                term2();
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
 
     }
 
-    public void Termo() throws IOException {
+    public void term2() throws IOException {
         //term’ ::= λ | mulop factor-a term’  
         switch (token.tag) {
             case '*':
                 eat('*');
                 factorA();
-                Termo();
+                term2();
                 break;
             case ('/'):
                 eat('/');
                 factorA();
-                Termo();
+                term2();
                 break;
             case Tag.AND:
                 eat(Tag.AND);
                 factorA();
-                Termo();
+                term2();
                 break;
             //não coloquei default por poder ser Lambida, então ACHO que se fosse lambida ia dar erro
         }
@@ -447,7 +446,7 @@ public class Sintático {
                 factor();
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
 
@@ -460,20 +459,20 @@ public class Sintático {
                 Identifier();
                 break;
             case Tag.NUM:
-                Constant();
+                constant();
                 break;
             case ('('):
                 eat('(');
-                EXPRESSION();
+                expression();
                 eat(')');
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
 
-    public void Relop() throws IOException {
+    public void relop() throws IOException {
         //relop ::= "=" | ">" | ">=" | "<" | "<=" | "!=" 
         switch (token.tag) {
             case Tag.EQ:
@@ -495,12 +494,12 @@ public class Sintático {
                 eat(Tag.NE);
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
 
-    public void ADDop() throws IOException {
+    public void addop() throws IOException {
         // addop ::= "+" | "-" | "||" 
         switch (token.tag) {
             case ('+'):
@@ -513,12 +512,12 @@ public class Sintático {
                 eat(Tag.OR);
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
 
-    public void MULop() throws IOException {
+    public void mulop() throws IOException {
         //mulop ::= "*" | "/" | "&&" 
         switch (token.tag) {
             case ('*'):
@@ -531,12 +530,12 @@ public class Sintático {
                 eat(Tag.AND);
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
 
-    public void Constant() throws IOException {
+    public void constant() throws IOException {
         //constant ::= integer_const | float_const 
         switch (token.tag) {
             case Tag.INT:
@@ -546,7 +545,7 @@ public class Sintático {
                 FLOATconst();
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
@@ -562,7 +561,7 @@ public class Sintático {
                 }
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
     }
@@ -584,7 +583,7 @@ public class Sintático {
                 }
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
 
@@ -607,7 +606,7 @@ public class Sintático {
                 }                
                 break;
             default:
-                SintaticoErro();
+                erro();
         }
     }
 
@@ -619,7 +618,7 @@ public class Sintático {
                 eat(Tag.ID);
                 break;
             default:
-                SintaticoErro();
+                erro();
 
         }
         

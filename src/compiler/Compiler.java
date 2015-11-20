@@ -1,11 +1,12 @@
+package compiler;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import compiler.Lexer;
-import compiler.Token;
+
 import java.io.File;
 import java.util.Scanner;
 
