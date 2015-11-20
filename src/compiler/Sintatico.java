@@ -24,18 +24,12 @@ public class Sintatico {
     //implementação baseada no livro
     public Sintatico(Lexer lexer) throws IOException {
         this.lexer = lexer;
-        //token = lexer.words();
         avanca();
     }
 
-    private void avanca() throws IOException {
+    public void avanca() throws IOException {
     	token = lexer.scan();
-//        Token t = lexer.scan();
-//        if (t != null) {
-//            token = t;
-//        } else {
-//            //Else  no caso de ter acabado de ler
-//        }
+       
 
     }
 
@@ -56,10 +50,6 @@ public class Sintatico {
     //produção do símbolo inicial da gramática
     public void programa() throws IOException {
         //program ::= app identifier body
-    	eat(Tag.START);
-    	
-    	//criar aqui a tabela de simbolos
-    	
         switch (token.tag) {
             case Tag.APP:
                 eat(Tag.APP);
@@ -89,10 +79,10 @@ public class Sintatico {
 
     public void decList() throws IOException {
         //decl-list ::= decl {";" decl}
-        DECL();
+       decl();
         if (token.tag == ';') {
             eat(';');
-            DECL();
+            decl();
         } else {
             erro();
         }
@@ -378,7 +368,7 @@ public class Sintatico {
     public void simpleExpr2() throws IOException {
         //simple-expr’ ::= λ | addop term simple-expr’ 
         if (token.tag == Tag.OR || token.tag == '+' || token.tag == '-') {
-            Addop();
+            addop();
             term();
             simpleExpr2();
         }
@@ -598,7 +588,7 @@ public class Sintatico {
                 {
                     Literal();
                 }
-                Caractere();
+                Caracter();
                 eat('}');
                  if (token.tag == '{') //se for seguido de mais } já olha
                 {
@@ -624,14 +614,16 @@ public class Sintatico {
         
     }
 
-    public void WRITABLE() throws IOException {
+    public void Letter() throws IOException {
         // letter ::= [A-Za-z] 
+        
+       
     }
 
-    public void WRITABLE() throws IOException {
+    public void Digit() throws IOException {
         //digit ::= [0-9] 
     }
-    public void WRITABLE() throws IOException {
+    public void Caracter() throws IOException {
         //caractere ::= um dos 256 caracteres
     }
 }
