@@ -239,7 +239,7 @@ public class Lexer {
             w = new Word(Tag.ID, s);
             words.put(s, w);
             //IMPRIME NA TELA CADA ENTRADA NA TABELA DE SIMBOLOS
-            System.out.println("Colocando " + '"' + w.toString() + '"' + " na tabela de simbolos.");
+           // System.out.println("Colocando " + '"' + w.toString() + '"' + " na tabela de simbolos.");
             return w;
         }
 
@@ -249,24 +249,21 @@ public class Lexer {
             String literal = "";
             while (ch != '}') {
                 if (ch == '\n') {
-                    System.out.println("Erro na linha " + line);
+                   // System.out.println("Erro na linha " + line);
                     return new Token(Tag.ERROR);
                 }
                 literal += ch;
                 readch();
             }
             if (lexicError(ch)) {
-                System.out.println("Erro na linha " + line);
+                //System.out.println("Erro na linha " + line);
                 return new Token(Tag.ERROR);
             } else {
                 ch = ' ';
                 return new Word(Tag.LIT, literal);
             }
         }
-        //Fazer a impressão de tudo que esta sendo inserido na tabela 
-//        for (int i = 0; i < words.size(); i++) {
-//            System.out.println(words.get(i));
-//        }
+       
 
         Token t = new Token(ch);
         ch = ' ';
