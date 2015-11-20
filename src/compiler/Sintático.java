@@ -379,7 +379,7 @@ public class Sintático {
     public void SIMPLEexpression() throws IOException {
         //simple-expr’ ::= λ | addop term simple-expr’ 
         if (token.tag == Tag.OR || token.tag == '+' || token.tag == '-') {
-            Addop();
+            ADDop();
             Term();
             SIMPLEexpression();
         }
@@ -629,7 +629,12 @@ public class Sintático {
         // letter ::= [A-Za-z] 
     }
 
-    public void WRITABLE() throws IOException {
+    public void Digit() throws IOException {
+        if(token.tag == Tag.REAL){
+            eat(Tag.REAL);
+        }else if(token.tag == Tag.INT){
+            eat(Tag.INT);
+        }
         //digit ::= [0-9] 
     }
     public void WRITABLE() throws IOException {
