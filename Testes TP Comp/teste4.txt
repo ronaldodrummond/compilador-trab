@@ -1,0 +1,15 @@
+App teste4
+	int i, j, k, @total, 1soma, teste4;
+	float i, a
+start
+	read (i);
+	read (j);
+	read (k);
+	i := 4 * (5-3 * 50 / 10;
+	j := i * 10;
+	k := i* j / k;
+	k := 4 + a $;
+	write(i);
+	write(j);
+	write(k)
+stop
