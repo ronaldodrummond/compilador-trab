@@ -22,15 +22,19 @@ public class Compiler {
             String token = "";
             if (retorno == JFileChooser.APPROVE_OPTION) {
                 Lexer lexer = new Lexer(chooser.getSelectedFile());
+                
                 //for para percorrer o arquivo
                 Scanner input = new Scanner(chooser.getSelectedFile());
                 while (input.hasNextLine()) {
                     token = lexer.scan().toString();
-                    System.out.println(token);
+                    //System.out.println(token);
                 }
+                
                 if(token.equalsIgnoreCase("stop") != true){
                     System.out.println("Erro na linha " + Lexer.line);
                 }
+                Sintatico sint = new Sintatico(lexer);
+                sint.programa();//ai olha se o primeiro token é app
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
