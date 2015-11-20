@@ -34,7 +34,7 @@ public class TabelaDeSimbolos {
 		Set set = tabela.entrySet();
 		Iterator it = set.iterator();
 		while (it.hasNext()) {
-			Map<K, V>.Entry<Token, int> entry = (Map.Entry<Token, int>) it.next();
+		//HashMap<K, V>.Entry<Token,String> entry = (HashMap.Entry<Token, String) it.next();
 		}
 	}
 }
