@@ -27,18 +27,19 @@ public class Compiler {
                 Scanner input = new Scanner(chooser.getSelectedFile());
                 while (input.hasNextLine()) {
                     token = lexer.scan().toString();
-                    //System.out.println(token);
+                    System.out.println(token);
                 }
                 
                 if(token.equalsIgnoreCase("stop") != true){
                     System.out.println("Erro na linha " + Lexer.line);
                 }
                 Sintatico sint = new Sintatico(lexer);
-                sint.programa();//ai olha se o primeiro token é app
+                sint.analisador();//ai olha se o primeiro token é app
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        
 
     }
 }
