@@ -1,17 +1,7 @@
 package compiler;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Stack;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-
-import compiler.Tag;
 
 public class Sintatico {
 

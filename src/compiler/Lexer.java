@@ -192,7 +192,7 @@ public class Lexer {
                 return new NumInt(value);
             }
         }
-        
+           
         //Identificador
         if (Character.isLetter(ch) || ch == '_') {
             StringBuffer sb = new StringBuffer();

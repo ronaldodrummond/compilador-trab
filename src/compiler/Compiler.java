@@ -1,20 +1,14 @@
 package compiler;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
-import java.io.File;
-import java.util.Scanner;
 
 
 public class Compiler {
 
     public static void main(String[] args) throws IOException {
-        // TODO code application logic here
 
         try {
             JFileChooser chooser = new JFileChooser();
