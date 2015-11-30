@@ -18,9 +18,8 @@ public class Sintatico {
     }
 
     public void avanca() throws IOException {
-    	token = lexer.scan();
-       
-
+    	token = lexer.scan();  
+    	System.out.println();
     }
 
     private void erro() {
@@ -43,7 +42,7 @@ public class Sintatico {
         switch (token.tag) {
             case Tag.APP:
                 eat(Tag.APP);
-                Identifier();
+                identifier();
                 body();
                 break;
             default:
@@ -58,7 +57,12 @@ public class Sintatico {
             case Tag.INT:
             case Tag.REAL: //na implementação que eu vi ele olha se é inteiro ou real com 2 cases no caso 
                 decList();
-                eat(Tag.START); //eat START
+                if (token.tag==Tag.START) {
+                	eat(Tag.START); //eat START
+                } else {
+                	System.out.println("Erro ;");
+                	erro();
+                }
                 stmtList();
                 eat(Tag.STOP); //eat STOP 
                 break;
@@ -69,13 +73,11 @@ public class Sintatico {
 
     public void decList() throws IOException {
         //decl-list ::= decl {";" decl}
-       decl();
-        if (token.tag == ';') {
+    	decl();
+        while(token.tag == ';') {
             eat(';');
             decl();
-        } else {
-            erro();
-        }
+        } 
     }
 
     public void decl() throws IOException {
@@ -84,10 +86,21 @@ public class Sintatico {
         switch (token.tag) {
             case Tag.INT:
             case Tag.REAL:
+            	type();
                 identList();
                 break;
             default:
                 erro();
+        }
+    }
+    
+    public void type() throws IOException {
+        if (token.tag == Tag.INT) {
+            eat(Tag.INT);
+        } else if (token.tag == Tag.FLOAT) {
+            eat(Tag.FLOAT);
+        } else {
+            System.out.println("Faltou tipo na linha " + Lexer.line);
         }
     }
 
@@ -95,11 +108,10 @@ public class Sintatico {
         //ident-list ::= identifier {"," identifier}
         switch (token.tag) {
             case Tag.ID:
-                Identifier();
-
-                if (token.tag == ';') {
-                    eat(';');
-                    Identifier();
+                identifier();
+                while (token.tag == ',') {
+                    eat(',');
+                    identifier();
                 }
                 break;
             default:
@@ -143,7 +155,7 @@ public class Sintatico {
                 WHILEstmt();
                 break;
             case Tag.REPEAT:
-                REPEATstmt();
+                repeatStmt();
                 break;
             case Tag.READ:
                 readStmt();
@@ -162,7 +174,7 @@ public class Sintatico {
         switch (token.tag) {
             case Tag.ID:
                 eat(Tag.ID);
-                Identifier();
+                identifier();
                 eat(Tag.ASGN);
                 simpleExpr();
                 break;
@@ -212,7 +224,7 @@ public class Sintatico {
 
     }
 
-    public void REPEATstmt() throws IOException {
+    public void repeatStmt() throws IOException {
         //repeat-stmt ::= repeat stmt-list stmt-suffix
         switch (token.tag) {
             case Tag.REPEAT:
@@ -244,7 +256,7 @@ public class Sintatico {
         //while-stmt ::= stmt-prefix stmt-list end 
         switch (token.tag) {
             case Tag.WHILE:
-                STMTprefix();
+                stmtPrefix();
                 stmtList();
                 eat(Tag.END);
                 break;
@@ -253,7 +265,7 @@ public class Sintatico {
         }
     }
 
-    public void STMTprefix() throws IOException {
+    public void stmtPrefix() throws IOException {
         //stmt-prefix ::= while condition do 
         switch (token.tag) {
             case Tag.WHILE:
@@ -272,7 +284,7 @@ public class Sintatico {
             case Tag.READ:
                 eat(Tag.READ);
                 eat('(');
-                Identifier();
+                identifier();
                 eat(')');
                 break;
             default:
@@ -436,7 +448,7 @@ public class Sintatico {
         //factor ::= identifier | constant | "(" expression ")" 
         switch (token.tag) {
             case Tag.ID:
-                Identifier();
+                identifier();
                 break;
             case Tag.NUM:
                 constant();
@@ -519,10 +531,10 @@ public class Sintatico {
         //constant ::= integer_const | float_const 
         switch (token.tag) {
             case Tag.INT:
-                INTEGERconst();
+                integerConst();
                 break;
             case Tag.FLOAT:
-                FLOATconst();
+                floatConst();
                 break;
             default:
                 erro();
@@ -530,14 +542,14 @@ public class Sintatico {
         }
     }
 
-    public void INTEGERconst() throws IOException {
+    public void integerConst() throws IOException {
         // integer_const ::= digit {digit} 
         switch (token.tag) {
             case Tag.INT:
                 eat(Tag.INT);
                 if (token.tag == Tag.INT) //se for seguido de mais numeros já olha
                 {
-                    INTEGERconst();
+                    integerConst();
                 }
                 break;
             default:
@@ -546,20 +558,20 @@ public class Sintatico {
         }
     }
 
-    public void FLOATconst() throws IOException {
+    public void floatConst() throws IOException {
         // float_const ::= digit {digit} “.” digit {digit} 
         switch (token.tag) {
             case Tag.FLOAT:
                 eat(Tag.FLOAT);
                 if (token.tag == Tag.FLOAT) //se for seguido de mais numeros já olha
                 {
-                    FLOATconst();
+                    floatConst();
                 }
                 eat('.');
                 eat(Tag.FLOAT);
                 if (token.tag == Tag.FLOAT) //se for seguido de mais numeros já olha
                 {
-                    FLOATconst();
+                    floatConst();
                 }
                 break;
             default:
@@ -569,20 +581,20 @@ public class Sintatico {
 
     }
 
-    public void Literal() throws IOException {
+    public void literal() throws IOException {
         //literal ::= " {" {caractere} "}" 
         switch (token.tag) {
             case ('{'):
                 eat('{');
                 if (token.tag == '{') //se for seguido de mais } já olha
                 {
-                    Literal();
+                    literal();
                 }
-                Caracter();
+                caracter();
                 eat('}');
                  if (token.tag == '{') //se for seguido de mais } já olha
                 {
-                    Literal();
+                    literal();
                 }                
                 break;
             default:
@@ -590,7 +602,7 @@ public class Sintatico {
         }
     }
 
-    public void Identifier() throws IOException {
+    public void identifier() throws IOException {
         //Não sei se é isso mesmo, DUVIDA
         //identifier ::= letter |“_” {letter | digit | “_”} 
         switch (token.tag) {
@@ -604,13 +616,13 @@ public class Sintatico {
         
     }
 
-    public void Letter() throws IOException {
+    public void letter() throws IOException {
         // letter ::= [A-Za-z] 
         
        
     }
 
-    public void Digit() throws IOException {
+    public void digit() throws IOException {
         //digit ::= [0-9]
         if(token.tag == Tag.FLOAT){
             eat(Tag.FLOAT);
@@ -621,7 +633,7 @@ public class Sintatico {
         }
         
     }
-    public void Caracter() throws IOException {
+    public void caracter() throws IOException {
         //caractere ::= um dos 256 caracteres
         
     }

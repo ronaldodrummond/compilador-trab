@@ -192,6 +192,8 @@ public class Lexer {
                 return new NumInt(value);
             }
         }
+        
+        //System.out.println(ch);
            
         //Identificador
         if (Character.isLetter(ch) || ch == '_') {
@@ -208,7 +210,7 @@ public class Lexer {
                     && ch != '-' && ch != '*' && ch != '/'
                     && ch != ';' && ch != '(' && ch != ')'
                     && ch != ' ' && ch != '\t' && ch != '\r'
-                    && ch != '\b' && ch != '.') {
+                    && ch != '\b' && ch != '.' && ch != ',' && ch != '\n') {
                 
                 if (sb.toString().equalsIgnoreCase("start") || sb.toString().equalsIgnoreCase("stop") || isApp == true) {
                     isApp = false;
@@ -216,11 +218,11 @@ public class Lexer {
                             && ch != '\r' && ch != '\b') {
                         readch();
                     }
-                } else if(ch == ','){
-                    while (ch != ' ' && ch != '\n' && ch != '\t'
-                            && ch != '\r' && ch != '\b') {
-                        readch();
-                    }
+//                } else if(ch == ','){
+//                    while (ch != ' ' && ch != '\n' && ch != '\t'
+//                            && ch != '\r' && ch != '\b') {
+//                        readch();
+//                    }
                 }else{
                     System.out.println("Erro na linha "
                             + line);
