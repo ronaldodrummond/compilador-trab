@@ -435,7 +435,7 @@ public class Sintatico {
                 factor();
                 break;
             case '(':
-                eat('(');
+//                eat('(');
                 factor();
                 break;
             case Tag.ID:
