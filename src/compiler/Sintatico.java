@@ -55,7 +55,8 @@ public class Sintatico {
         //duvidas quanto a parte [decl-list]
         switch (token.tag) {
             case Tag.INT:
-            case Tag.REAL: //na implementação que eu vi ele olha se é inteiro ou real com 2 cases no caso 
+            case Tag.REAL:
+            case Tag.FLOAT://na implementação que eu vi ele olha se é inteiro ou real com 2 cases no caso 
                 decList();
                 if (token.tag==Tag.START) {
                 	eat(Tag.START); //eat START
@@ -86,6 +87,7 @@ public class Sintatico {
         switch (token.tag) {
             case Tag.INT:
             case Tag.REAL:
+            case Tag.FLOAT:
             	type();
                 identList();
                 break;
@@ -130,7 +132,7 @@ public class Sintatico {
             case Tag.WRITE:
                 stmt();
 
-                if (token.tag == ';') {
+                while (token.tag == ';') {
                     eat(';');
                     stmt();
                 }
@@ -173,7 +175,7 @@ public class Sintatico {
         //assign-stmt ::= identifier ":=" simple_expr 
         switch (token.tag) {
             case Tag.ID:
-                eat(Tag.ID);
+//                eat(Tag.ID);
                 identifier();
                 eat(Tag.ASGN);
                 simpleExpr();
@@ -316,6 +318,7 @@ public class Sintatico {
             case Tag.ID:
             case Tag.INT:
             case Tag.REAL:
+            case Tag.FLOAT:
             case '(':
             case '{':
             case '!':
@@ -333,6 +336,7 @@ public class Sintatico {
             case Tag.ID:
             case Tag.INT:
             case Tag.REAL:
+            case Tag.FLOAT:
             case '(':
             case '{':
             case '!':
@@ -355,6 +359,7 @@ public class Sintatico {
             case Tag.ID:
             case Tag.INT:
             case Tag.REAL:
+            case Tag.FLOAT:
             case '(':
             case '{':
             case '!':
@@ -382,6 +387,7 @@ public class Sintatico {
             case Tag.ID:
             case Tag.INT:
             case Tag.REAL:
+            case Tag.FLOAT:
             case '(':
             case '{':
             case '!':
@@ -435,6 +441,7 @@ public class Sintatico {
             case Tag.ID:
             case Tag.INT:
             case Tag.REAL:
+            case Tag.FLOAT:
                 factor();
                 break;
             default:
@@ -450,7 +457,8 @@ public class Sintatico {
             case Tag.ID:
                 identifier();
                 break;
-            case Tag.NUM:
+            case Tag.FLOAT:
+            case Tag.INT:
                 constant();
                 break;
             case ('('):
@@ -547,10 +555,10 @@ public class Sintatico {
         switch (token.tag) {
             case Tag.INT:
                 eat(Tag.INT);
-                if (token.tag == Tag.INT) //se for seguido de mais numeros já olha
-                {
-                    integerConst();
-                }
+//                if (token.tag == Tag.INT) //se for seguido de mais numeros já olha
+//                {
+//                    integerConst();
+//                }
                 break;
             default:
                 erro();
@@ -563,16 +571,16 @@ public class Sintatico {
         switch (token.tag) {
             case Tag.FLOAT:
                 eat(Tag.FLOAT);
-                if (token.tag == Tag.FLOAT) //se for seguido de mais numeros já olha
-                {
-                    floatConst();
-                }
-                eat('.');
-                eat(Tag.FLOAT);
-                if (token.tag == Tag.FLOAT) //se for seguido de mais numeros já olha
-                {
-                    floatConst();
-                }
+//                if (token.tag == Tag.FLOAT) //se for seguido de mais numeros já olha
+//                {
+//                    floatConst();
+//                }
+//                eat('.');
+//                eat(Tag.INT);
+//                if (token.tag == Tag.FLOAT) //se for seguido de mais numeros já olha
+//                {
+//                    floatConst();
+//                }
                 break;
             default:
                 erro();

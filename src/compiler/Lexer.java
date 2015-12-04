@@ -31,7 +31,7 @@ public class Lexer {
         reserve(new Word(Tag.THEN, "then"));
         reserve(new Word(Tag.ELSE, "else"));
         reserve(new Word(Tag.END, "end"));
-        reserve(new Word(Tag.FLOAT, "float"));
+        reserve(new Word(Tag.FLOAT, "real"));
         reserve(new Word(Tag.INT, "int"));
         reserve(new Word(Tag.STRING, "string"));
         reserve(new Word(Tag.START, "start"));
@@ -42,7 +42,7 @@ public class Lexer {
         reserve(new Word(Tag.READ, "read"));
         reserve(new Word(Tag.WRITE, "write"));
         reserve(new Word(Tag.APP, "app"));
-        reserve(new Word(Tag.REAL, "real"));
+//        reserve(new Word(Tag.REAL, "real"));
         reserve(new Word(Tag.AND, "and"));
         reserve(new Word(Tag.OR, "or"));
         reserve(new Word(Tag.NUM, "num"));
@@ -58,7 +58,7 @@ public class Lexer {
                 && ch != ' ' && ch != '\t' && ch != '\r'
                 && ch != '\b' && ch != '.') {
             // pelo que entendi falta uma execessão pra palavra ou caracter...não?
-            System.out.println("Erro na linha "
+            System.out.println("Erro Lwexico na linha "
                     + line);
             while (ch != ' ' && ch != '\n' && ch != '\t'
                     && ch != '\r' && ch != '\b') {
@@ -180,8 +180,10 @@ public class Lexer {
                 //return new Token(ERRO);
             } else if (ch == '.') {
                 String valueR = value + ".";
+                readch();
                 while (Character.isDigit(ch)) {
                     valueR += ch + "";
+                    readch();
                 }
                 if (lexicError(ch)) {
                     //return new Token(ERRO);
@@ -224,7 +226,7 @@ public class Lexer {
 //                        readch();
 //                    }
                 }else{
-                    System.out.println("Erro na linha "
+                    System.out.println("Erro Lexico na linha "
                             + line);
                     while (ch != ' ' && ch != '\n' && ch != '\t'
                             && ch != '\r' && ch != '\b') {

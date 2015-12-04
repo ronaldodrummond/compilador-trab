@@ -5,7 +5,7 @@ public class NumInt extends Token{
     public final int value;
     
     public NumInt(int value) {
-        super(Tag.NUM);
+        super(Tag.INT);
         this.value = value;
     }
     
