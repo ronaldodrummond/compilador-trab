@@ -117,13 +117,13 @@ public class Lexer {
                 if (readch('=')) {
                     return Word.le;
                 } else {
-                    return new Token('<');
+                    return new Token(Tag.LS);
                 }
             case '>':
                 if (readch('=')) {
                     return Word.ge;
                 } else {
-                    return new Token('>');
+                    return new Token(Tag.GR);
                 }
             case '!':
                 if (readch('=')) {
@@ -133,7 +133,7 @@ public class Lexer {
                 }
             case '=':
                 ch = ' ';
-                return new Token('=');
+                return new Token(Tag.EQ);
             case '+':
                 ch = ' ';
                 return new Token('+');
@@ -176,9 +176,10 @@ public class Lexer {
                 value = 10 * value + Character.digit(ch, 10);
                 readch();
             } while (Character.isDigit(ch));
-            if (lexicError(ch)) {
-                //return new Token(ERRO);
-            } else if (ch == '.') {
+//            if (lexicError(ch)) {
+//                //return new Token(ERRO);
+//            } else 
+                if (ch == '.') {
                 String valueR = value + ".";
                 readch();
                 while (Character.isDigit(ch)) {

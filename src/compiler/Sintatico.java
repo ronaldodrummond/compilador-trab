@@ -419,6 +419,8 @@ public class Sintatico {
                 factorA();
                 term2();
                 break;
+            default:
+                break;
             //não coloquei default por poder ser Lambida, então ACHO que se fosse lambida ia dar erro
         }
     }
