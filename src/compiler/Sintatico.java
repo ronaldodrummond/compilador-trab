@@ -594,16 +594,16 @@ public class Sintatico {
         switch (token.tag) {
             case ('{'):
                 eat('{');
-                if (token.tag == '{') //se for seguido de mais } já olha
-                {
-                    literal();
-                }
+//                if (token.tag == '{') //se for seguido de mais } já olha
+//                {
+//                    literal();
+//                }
                 caracter();
                 eat('}');
-                 if (token.tag == '{') //se for seguido de mais } já olha
-                {
-                    literal();
-                }                
+//                 if (token.tag == '{') //se for seguido de mais } já olha
+//                {
+//                    literal();
+//                }                
                 break;
             default:
                 erro();
@@ -643,6 +643,13 @@ public class Sintatico {
     }
     public void caracter() throws IOException {
         //caractere ::= um dos 256 caracteres
-        
+        switch(token.tag){
+            case '{':
+            case '\n':
+                erro();
+            default:
+                eat(token.tag);
+                break;
+        }
     }
 }

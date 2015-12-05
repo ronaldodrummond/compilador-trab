@@ -249,8 +249,9 @@ public class Lexer {
 
         //Literal
         if (ch == '{') {
+            String literal = "" + ch;
             readch();
-            String literal = "";
+            
             while (ch != '}') {
                 if (ch == '\n') {
                    // System.out.println("Erro na linha " + line);
@@ -259,13 +260,17 @@ public class Lexer {
                 literal += ch;
                 readch();
             }
-            if (lexicError(ch)) {
-                //System.out.println("Erro na linha " + line);
-                return new Token(Tag.ERROR);
-            } else {
+            if(ch == '}'){
+                literal += ch;
+//                readch();
+            }
+//            if (lexicError(ch)) {
+//                //System.out.println("Erro na linha " + line);
+//                return new Token(Tag.ERROR);
+//            } else {
                 ch = ' ';
                 return new Word(Tag.LIT, literal);
-            }
+//            }
         }
        
 
