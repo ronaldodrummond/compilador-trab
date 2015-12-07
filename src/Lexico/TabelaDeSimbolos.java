@@ -10,9 +10,8 @@ public class TabelaDeSimbolos {
 	private Hashtable tabela;
 	private TabelaDeSimbolos prev;
 	
-	public TabelaDeSimbolos (TabelaDeSimbolos prev) {
+	public TabelaDeSimbolos () {
 		this.tabela = new Hashtable();
-		this.prev = prev;
 	}
 	
 	public void put (Token w, int id) {
@@ -29,7 +28,14 @@ public class TabelaDeSimbolos {
 		}
 		return 0;
 	}
-	
+	// falta casse getInstance
+        public  TabelaDeSimbolos getInstance() {
+        if (prev == null) {
+            prev = new TabelaDeSimbolos();
+            return prev;
+        }
+        return prev;
+    }
 	public void imprimirTabela() {
 		System.out.println("\nTabela de Símbolos:\n");
 		Set set = tabela.entrySet();
