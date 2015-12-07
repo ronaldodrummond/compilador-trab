@@ -14,7 +14,7 @@ public abstract class Sintatico2 {
     public boolean declaracao; // PORQUE?
     public static Lexer lexer;
     public static Token token;
-   // public static TabelaDeSimbolos tabelaSimbolos = TabelaDeSimbolos.getInstance();
+   public static TabelaDeSimbolos ts = TabelaDeSimbolos.getInstance();
     
     protected Sintatico2(Sintatico2 head){
         this.head = head; // PORQUE?
